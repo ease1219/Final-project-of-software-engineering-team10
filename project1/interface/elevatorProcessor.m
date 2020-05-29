@@ -1,7 +1,10 @@
 classdef elevatorProcessor < handle
     properties
-        ElevatorApp
-        FloorApp
+        LeftElevatorApp     % UI
+        RightElevatorApp    % UI
+        BottomFloorApp      % UI
+        TopFloorApp         % UI
+        MiddleFloorApp      % UI
         leftElevator
         rightElevator
     end
@@ -25,18 +28,8 @@ classdef elevatorProcessor < handle
             process.rightElevator = right;
         end
         
-        function El = chooseElevator(process, direction, currentFloor)
-           El = 0; % 0 means choose the left elevator, 1 means choose the right elevator 
-           if process.leftElevator.currentFloor == currentFloor
-               El = 0;
-           elseif process.rightElevator.currentFloor == currentFloor
-               El = 1;
-           else
-               if direction == 1  % here 1 means go up, -1 means go down
-                   
-               end
-                   
-           end
+        function receiveReq(process, floor, direction)
+            
         end
     end
     
