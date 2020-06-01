@@ -7,7 +7,7 @@ classdef elevatorProcessor < handle
         MiddleFloorApp      % UI
         leftElevator
         rightElevator
-        floorHeight = 3;    % for convenient, it'll be copied in elevator's properties.
+        floorHeight = 3;    % for convenient, it's also in elevator's properties.
         tempUp = [];
         tempDown = [];
     end

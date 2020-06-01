@@ -1,20 +1,15 @@
 classdef singleElevator < handle
    properties
-       speed = 1;               % the max speed of the elevator(m/s)
+       speed = 1.5;             % the max speed of the elevator(m/s)
        acceleration = 0.5;      % the acceleration(m/s^2)
-       v = 0;                   % real-time speed
-       a = 0;                   % real-time acceleration
-       h = 3;                   % real-time height, floor 1 is 3m high.
        direction = 0            % up(1) or down(-1), if no command, be zero
-       currentFloor = 1;        % real-time, which floor the elevator is at.
+       currentFloor = 1;        % simply, which floor the elevator is at. Initially at 1.
        defaultFloor = 1;        % go to default floor after a period of time without running
-       floorHeight              % height between two floor(m), will be copied from processor
-       doorKeepTime = 5;        % after open the door, keep the door open for a short period of time(s)
-       limitTime = 120          % time keep in the floor after finally usage before let it go to default floor(s)
+       floorHeight = 3;         % height between two floor(m)
+       doorKeepTime             % after open the door, keep the door open for a short period of time
+       limitTime = 120          % time keep in the floor after finally usage before let it go to default floor
        upRequest=[];            % used to store the requests of going up
        downRequest=[];          % used to store the requests of going down
-       
-       elevatorProcessor        % the processor
    end
    
    methods
@@ -32,9 +27,9 @@ classdef singleElevator < handle
        
        function receiveReq(process,aim)
            if aim < process.currentFloor
-               addDownRequest(aim);
+               addDownRequest(process,aim);
            elseif aim > process.currentFloor
-               addUpRequest(aim);
+               addUpRequest(process,aim);
            end
        end
        
