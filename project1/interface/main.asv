@@ -34,42 +34,17 @@ RE.elevatorProcessor = EP;
 RE.ElevatorUI = REapp;
 
 LEapp.elevatorProcessor = EP;
-LEapp.elevator = LE;
 REapp.elevatorProcessor = EP;
-REapp.elevator = RE;
 
-tt = timer;
-tt.StartDelay = 1;
-tt.ExecutionMode = 'fixedRate';
-tt.Period = EP.dt;
-tt.TasksToExecute = inf;
-tt.TimerFcn = @(~,~)running(LE,RE,EP);
-start(tt)
-
-function running(LE,RE,EP)
-    %tic
+function running()
     switch LE.door
         case 0
-            LE.doorClosed(EP.dt);
+            LE.doorClosed()
         case 1
-            LE.doorOpened(EP.dt);
+            
         case 2
-            LE.doorOpening(EP.dt);
+            
         case 3
-            LE.doorClosing(EP.dt);
+            
     end
-    
-    switch RE.door
-        case 0
-            RE.doorClosed(EP.dt);
-        case 1
-            RE.doorOpened(EP.dt);
-        case 2
-            RE.doorOpening(EP.dt);
-        case 3
-            RE.doorClosing(EP.dt);
-    end
-    %RE.h
-    %toc
 end
-

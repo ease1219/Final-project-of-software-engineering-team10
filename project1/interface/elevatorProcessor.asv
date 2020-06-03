@@ -162,8 +162,10 @@ classdef elevatorProcessor < handle
                     switch NO
                         case 0
                             process.ThirdFloor.openLeftDoor();
+                            process.ThirdFloor.Lamp.Color = [0.9,0.9,0.9];
                         case 1
                             process.ThirdFloor.openRightDoor();
+                            process.ThirdFloor.Lamp.Color = [0.9,0.9,0.9];
                     end
             end
         end
@@ -193,6 +195,26 @@ classdef elevatorProcessor < handle
                             process.ThirdFloor.closeRightDoor();
                     end
             end
+        end
+        
+        % display the information on each floor UI
+        function displayInfo(process,NO,floorMessage,dirMessage)
+            % left
+            switch NO
+                case 0
+                    process.FirstFloorApp.displayLeftFloor(floorMessage);
+                    process.SecondFloorApp.displayLeftFloor(floorMessage);
+                    process.ThirdFloorApp.displayLeftFloor(floorMessage);
+                    process.FirstFloorApp.displayLeftDir(dirMessage);
+                    process.SecondFloorApp.displayLeftDir(dirMessage);
+                    process.ThirdFloorApp.displayLeftDir(dirMessage);
+                case 1
+                    process.FirstFloorApp.displayLeftFloor(floorMessage);
+                    process.SecondFloorApp.displayLeftFloor(floorMessage);
+                    process.ThirdFloorApp.displayLeftFloor(floorMessage);
+                    process.FirstFloorApp.displayLeftDir(dirMessage);
+                    process.SecondFloorApp.displayLeftDir(dirMessage);
+                    process.ThirdFloorApp.displayLeftDir(dirMessage);
         end
         
         

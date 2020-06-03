@@ -54,10 +54,11 @@ classdef singleElevator < handle
        end
        
        % calculate the elevator's velocity and height, then display the
-       % floor information in the UI.
+       % information in the UI.
        function calculateAndDisplay(process,dt)
            process.v = process.v + dt*process.a;
            process.h = process.h + process.v*dt + 0.5*process.a*dt*dt;
+           process.ElevatorUI.Height.Text = num2str(process.h);
            if process.h >= 3 && process.h < 4.5 && process.currentFloor ~= 1
                process.currentFloor = 1;
                process.ElevatorUI.displayFloorMessage("1");
@@ -68,7 +69,17 @@ classdef singleElevator < handle
                process.currentFloor = 3;
                process.ElevatorUI.displayFloorMessage("3");
            end
-                
+           switch process.direction
+               case 1
+                   process.ElevatorUI.displayDirectionMessage("¡Ä");
+                   process.elevatorProcessor.displayInfo(process.NO, num2str(process.currentFloor),"¡Ä");
+               case -1
+                   process.ElevatorUI.displayDirectionMessage("¡Å");
+                   process.elevatorProcessor.displayInfo(process.NO, num2str(process.currentFloor),"¡Å");
+               case 0
+                   process.ElevatorUI.displayDirectionMessage(" ");
+                   process.elevatorProcessor.displayInfo(process.NO, num2str(process.currentFloor)," ");
+           end
        end
        
        % while door is opening(door=2)
@@ -119,46 +130,44 @@ classdef singleElevator < handle
        function upFunction(process,dt)
            if ~isempty(process.upRequest) % up request is not empty
                dist = process.upRequest(1)*process.floorHeight - process.h;
-               if dist == 0
+               if dist >=-0.02 && dist <= 0.02
                    process.a = 0;
+                   process.v = 0;
                    process.ElevatorUI.openInsideDoor();
                    process.ElevatorUI.closeLight(process.currentFloor);
-                   process.elevatorProcessor.openOutsideDoor(process.currentFloor,processor.NO,1);
+                   process.elevatorProcessor.openOutsideDoor(process.currentFloor,process.NO,1);
                    process.door = 2;
                    process.t = dt;
                    process.upRequest(1) = [];
-               elseif dist>0 && dist<1 
-                   process.a = -process.acceleration;
-               elseif dist == 1
+               elseif dist>0.02 && dist<1.01 && process.v >0
                    process.a = -process.acceleration;
                else
-                   if process.v == process.speed && process.a ~= 0
+                   if process.v >= process.speed && process.v <= process.speed+0.025
                        process.a = 0;
-                   elseif abs(process.v) < process.speed 
+                   elseif abs(process.v) < process.speed
                        process.a = process.acceleration;
                    end
                end
                process.calculateAndDisplay(dt);
                
-           elseif ~isempty(process.downRequest) && process.downRequest(1)*process.floorHeight >= process.h
+           elseif ~isempty(process.downRequest) && process.downRequest(1) >= process.currentFloor
                dist = process.downRequest(1)*process.floorHeight - process.h;
-               if dist == 0
+               if dist >=-0.02 && dist <= 0.02
                    process.direction = -1;
                    process.a = 0;
+                   process.v = 0;
                    process.ElevatorUI.openInsideDoor();
                    process.ElevatorUI.closeLight(process.currentFloor);
-                   process.elevatorProcessor.openOutsideDoor(process.currentFloor,processor.NO,-1);
+                   process.elevatorProcessor.openOutsideDoor(process.currentFloor,process.NO,-1);
                    process.door = 2;
                    process.t = dt;
                    process.downRequest(1) = [];
-               elseif dist>0 && dist<1 
-                   process.a = -process.acceleration;
-               elseif dist == 1
+               elseif dist>0.02 && dist<1.01 
                    process.a = -process.acceleration;
                else
-                   if process.v == process.speed && process.a ~= 0
+                   if process.v >= process.speed && process.v <= process.speed+0.025
                        process.a = 0;
-                   elseif abs(process.v) < process.speed 
+                   elseif abs(process.v) < process.speed
                        process.a = process.acceleration;
                    end
                end
@@ -203,52 +212,56 @@ classdef singleElevator < handle
        function downFunction(process,dt)
            if ~isempty(process.downRequest) % down request is not empty
                dist = process.h - process.downRequest(1)*process.floorHeight;
-               if dist == 0
+               if dist >=-0.02 && dist <= 0.02
                    process.a = 0;
+                   process.v = 0;
                    process.ElevatorUI.openInsideDoor();
-                   process.elevatorProcessor.openOutsideDoor(process.currentFloor,processor.NO);
+                   process.ElevatorUI.closeLight(process.currentFloor);
+                   process.elevatorProcessor.openOutsideDoor(process.currentFloor,process.NO,-1);
                    process.door = 2;
                    process.t = dt;
                    process.downRequest(1) = [];
-               elseif dist>0 && dist<1 
-                   process.a = process.acceleration;
-               elseif dist == 1
+               elseif dist>0.02 && dist<1.01
                    process.a = process.acceleration;
                else
-                   if process.v == -process.speed && process.a ~= 0
+                   if abs(process.v) >= process.speed && process.v <= process.speed+0.025
                        process.a = 0;
-                   end
-               end
-               process.calculateAndDisplay(dt);
-                   
-           elseif ~isempty(process.upRequest) && process.upRequest(1)*process.floorHeight <= process.h
-               dist =  process.h - process.upRequest(1)*process.floorHeight;
-               if dist == 0
-                   process.direction = 1;
-                   process.a = 0;
-                   process.ElevatorUI.openInsideDoor();
-                   process.elevatorProcessor.openOutsideDoor(process.currentFloor,processor.NO);
-                   process.door = 2;
-                   process.t = dt;
-                   process.upRequest(1) = [];
-               elseif dist>0 && dist<1 
-                   process.a = process.acceleration;
-               elseif dist == 1
-                   process.a = process.acceleration;
-               else
-                   if process.v == - process.speed && process.a ~= 0
-                       process.a = 0;
+                   elseif abs(process.v) < process.speed
+                       process.a = -process.acceleration;
                    end
                end
                process.calculateAndDisplay(dt);
                
-           else % elevator's down request is empty
-               % total up requests
-               united = flip(unique([process.temp, process.elevatorProcessor.tempDown, process.downRequest]));
+           elseif ~isempty(process.upRequest) && process.upRequest(1) <= process.currentFloor
+               dist = process.h - process.upRequest(1)*process.floorHeight ;
+               if dist >=-0.02 && dist <= 0.02
+                   process.direction = 1;
+                   process.a = 0;
+                   process.v = 0;
+                   process.ElevatorUI.openInsideDoor();
+                   process.ElevatorUI.closeLight(process.currentFloor);
+                   process.elevatorProcessor.openOutsideDoor(process.currentFloor,process.NO,1);
+                   process.door = 2;
+                   process.t = dt;
+                   process.upRequest(1) = [];
+               elseif dist>0.02 && dist<1.01 
+                   process.a = process.acceleration;
+               else
+                   if abs(process.v) >= process.speed && process.v <= process.speed+0.025
+                       process.a = 0;
+                   elseif abs(process.v) < process.speed
+                       process.a = -process.acceleration;
+                   end
+               end
+               process.calculateAndDisplay(dt);
+                   
+           else % elevator's down request is empty and the lowest up request is not lower than current
+               % check total up requests
+               united = unique([process.temp, process.elevatorProcessor.tempDown, process.downRequest]);
                if ~isempty(united)
                    process.temp = [];
-                   process.elevatorProcessor.tempUp = [];
-                   if united(1) >= process.currentFloor % elevator doesn't need to go down to carry the first request
+                   process.elevatorProcessor.tempDown = [];
+                   if united(1)>=process.currentFloor % elevator doesn't need to go down to carry the first request
                        process.upRequest = united;
                        process.direction = 1;
                    % if the elevator needs to go down to carry the first
@@ -259,13 +272,13 @@ classdef singleElevator < handle
                    % there shouldn't be any tempDown request that is lower
                    % than current floor.
                    if ~isempty(process.elevatorProcessor.tempDown)
-                       ttt = process.elevatorProcessor.tempUp;
-                       process.elevatorProcessor.tempUp = [];
-                       if ttt(1) < process.currentFloor
-                           process.direction = -1;
-                           process.upRequest = ttt;
+                       ttt = process.elevatorProcessor.tempDown;
+                       process.elevatorProcessor.tempDown = [];
+                       if ttt(1) > process.currentFloor
+                           process.direction = 1;
+                           process.downRequest = ttt;
                        else
-                           process.upRequest = ttt;
+                           process.downRequest = ttt;
                        end
                    else
                        process.direction = 0;
@@ -276,10 +289,20 @@ classdef singleElevator < handle
            end
        end
        
+       function setDir(process,aim,direction)
+           if aim > process.currentFloor
+               process.direction = 1;
+           elseif aim < process.currentFloor
+               process.direction = -1;
+           else
+               process.direction = direction;
+           end
+       end
+       
        % elevator has "no direction" property (direction = 0)
        function stayFunction(process,dt)
            tup = unique([process.upRequest, process.elevatorProcessor.tempUp]);
-           tdown = flip(unique([process.downRequest, processor.elevatorProcessor.tempDown]));
+           tdown = flip(unique([process.downRequest, process.elevatorProcessor.tempDown]));
            
            if ~isempty(tup)
                if ~isempty(tdown)
@@ -287,11 +310,11 @@ classdef singleElevator < handle
                    tdowndir = -1*(tdown(1)-process.currentFloor);
                    if tupdir*tdowndir > 0
                        if abs(tupdir) <= abs(tdowndir)
-                           process.direction = 1;
+                           process.setDir(tup(1),1);
                            process.upRequest = tup;
                            process.elevatorProcessor.tempUp = [];
                        else 
-                           process.direction = -1;
+                           process.setDir(tdown(1),-1);
                            process.downRequest = tdown;
                            process.elevatorProcessor.tempDown = [];
                        end
@@ -317,18 +340,25 @@ classdef singleElevator < handle
                        end
                    end
                else
-                   process.direction = 1;
+                   process.setDir(tup(1),1);
                    process.upRequest = tup;
                    process.elevatorProcessor.tempUp = [];
                end
                
            elseif ~isempty(tdown)
-               process.direction = -1;
+               process.setDir(tdown(1),-1);
                process.downRequest = tdown;
                process.elevatorProcessor.tempDown = [];
                
            else % all empty
                process.t = process.t + dt;
+           end
+           if process.t >= 120
+               if process.h > 3
+                   process.downRequest = 1;
+                   process.t = 0;
+               end
+           
            end
            process.calculateAndDisplay(dt);
        end

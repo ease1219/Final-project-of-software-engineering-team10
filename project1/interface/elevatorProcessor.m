@@ -8,7 +8,7 @@ classdef elevatorProcessor < handle
         leftElevator
         rightElevator
         floorHeight = 3;    % for convenient, it'll be copied in elevator's properties.
-        dt = 0.1;           % 1/dt defines the refresh rate of the processor.
+        dt = 0.05;           % 1/dt defines the refresh rate of the processor.
         tempUp = [];
         tempDown = [];
     end
@@ -59,13 +59,13 @@ classdef elevatorProcessor < handle
         end
         
         % add the request to the nearest elevator
-        function judgeDist(process,aim)   
+        function judgeDist(process,aim,direction)   
             leftDis = abs(process.leftElevator.h - aim*process.floorHeight);
             rightDis = abs(process.rightElevator.h - aim*process.floorHeight);
             if leftDis < rightDis
-                process.leftElevator.receiveReq(aim);
+                process.leftElevator.receiveReq(aim,direction);
             else
-                process.rightElevator.receiveReq(aim);
+                process.rightElevator.receiveReq(aim,direction);
             end
         end
         
@@ -74,7 +74,7 @@ classdef elevatorProcessor < handle
             % if both elevators are standing still, call the nearest
             % elevator
             if process.leftElevator.direction == 0 && process.rightElevator.direction == 0
-                process.judgeDist(aim);
+                process.judgeDist(aim,direction);
             % if one is standing stll and another one is running
             elseif process.leftElevator.direction == 0 || process.rightElevator.direction == 0
                 % left one is standing still
@@ -105,7 +105,7 @@ classdef elevatorProcessor < handle
                 if process.judgePos(process.leftElevator,aim,direction)
                     % while right one is OK too! this time call the nearest one
                     if process.judgePos(process.rightElevator,aim,direction)
-                        process.judgeDist(aim);
+                        process.judgeDist(aim,direction);
                     % right one is not OK...
                     else
                         process.leftElevator.receiveReq(aim);
@@ -133,39 +133,39 @@ classdef elevatorProcessor < handle
                 case 1
                     switch NO
                         case 0
-                            process.FirstFloor.openLeftDoor();
-                            process.FirstFloor.Lamp.Color = [0.9,0.9,0.9];
+                            process.FirstFloorApp.openLeftDoor();
+                            process.FirstFloorApp.Lamp.Color = [0.9,0.9,0.9];
                         case 1
-                            process.FirstFloor.openRightDoor();
-                            process.FirstFloor.Lamp.Color = [0.9,0.9,0.9];
+                            process.FirstFloorApp.openRightDoor();
+                            process.FirstFloorApp.Lamp.Color = [0.9,0.9,0.9];
                     end
                 case 2
                     switch NO
                         case 0
-                            process.SecondFloor.openLeftDoor();
+                            process.SecondFloorApp.openLeftDoor();
                             switch direction
                                 case 1
-                                    process.SecondFloor.UpLamp.Color = [0.9,0.9,0.9];
+                                    process.SecondFloorApp.UpLamp.Color = [0.9,0.9,0.9];
                                 case -1
-                                    process.SecondFloor.DownLamp.Color = [0.9,0.9,0.9];
+                                    process.SecondFloorApp.DownLamp.Color = [0.9,0.9,0.9];
                             end
                         case 1
-                            process.SecondFloor.openRightDoor();
+                            process.SecondFloorApp.openRightDoor();
                             switch direction
                                 case 1
-                                    process.SecondFloor.UpLamp.Color = [0.9,0.9,0.9];
+                                    process.SecondFloorApp.UpLamp.Color = [0.9,0.9,0.9];
                                 case -1
-                                    process.SecondFloor.DownLamp.Color = [0.9,0.9,0.9];
+                                    process.SecondFloorApp.DownLamp.Color = [0.9,0.9,0.9];
                             end
                     end
                 case 3
                     switch NO
                         case 0
-                            process.ThirdFloor.openLeftDoor();
-                            process.ThirdFloor.Lamp.Color = [0.9,0.9,0.9];
+                            process.ThirdFloorApp.openLeftDoor();
+                            process.ThirdFloorApp.Lamp.Color = [0.9,0.9,0.9];
                         case 1
-                            process.ThirdFloor.openRightDoor();
-                            process.ThirdFloor.Lamp.Color = [0.9,0.9,0.9];
+                            process.ThirdFloorApp.openRightDoor();
+                            process.ThirdFloorApp.Lamp.Color = [0.9,0.9,0.9];
                     end
             end
         end
@@ -176,24 +176,45 @@ classdef elevatorProcessor < handle
                 case 1
                     switch NO
                         case 0
-                            process.FirstFloor.closeLeftDoor();
+                            process.FirstFloorApp.closeLeftDoor();
                         case 1
-                            process.FirstFloor.closeRightDoor();
+                            process.FirstFloorApp.closeRightDoor();
                     end
                 case 2
                     switch NO
                         case 0
-                            process.SecondFloor.closeLeftDoor();
+                            process.SecondFloorApp.closeLeftDoor();
                         case 1
-                            process.SecondFloor.closeRightDoor();
+                            process.SecondFloorApp.closeRightDoor();
                     end
                 case 3
                     switch NO
                         case 0
-                            process.ThirdFloor.closeLeftDoor();
+                            process.ThirdFloorApp.closeLeftDoor();
                         case 1
-                            process.ThirdFloor.closeRightDoor();
+                            process.ThirdFloorApp.closeRightDoor();
                     end
+            end
+        end
+        
+        % display the information on each floor UI
+        function displayInfo(process,NO,floorMessage,dirMessage)
+            % left
+            switch NO
+                case 0
+                    process.FirstFloorApp.displayLeftFloor(floorMessage);
+                    process.SecondFloorApp.displayLeftFloor(floorMessage);
+                    process.ThirdFloorApp.displayLeftFloor(floorMessage);
+                    process.FirstFloorApp.displayLeftDir(dirMessage);
+                    process.SecondFloorApp.displayLeftDir(dirMessage);
+                    process.ThirdFloorApp.displayLeftDir(dirMessage);
+                case 1
+                    process.FirstFloorApp.displayRightFloor(floorMessage);
+                    process.SecondFloorApp.displayRightFloor(floorMessage);
+                    process.ThirdFloorApp.displayRightFloor(floorMessage);
+                    process.FirstFloorApp.displayRightDir(dirMessage);
+                    process.SecondFloorApp.displayRightDir(dirMessage);
+                    process.ThirdFloorApp.displayRightDir(dirMessage);
             end
         end
         
