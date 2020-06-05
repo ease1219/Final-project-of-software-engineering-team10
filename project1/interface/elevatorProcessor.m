@@ -30,12 +30,26 @@ classdef elevatorProcessor < handle
         % 3.Can the elevator stop at the calling floor in this single
         % running?
         % all three answers are OK, judgePos() will give TRUE.
-        function result=judgePos(elevator,aim,dir)
+        function result=judgePos(process, elevatorNO, aim, dir)
+            switch elevatorNO
+                case 0
+                    edir = process.leftElevator.direction;
+                    ev = process.leftElevator.v;
+                    ea = process.leftElevator.acceleration;
+                    eh = process.leftElevator.h;
+            
+                case 1
+                    edir = process.rightElevator.direction;
+                    ev = process.rightElevator.v;
+                    ea = process.rightElevator.acceleration;
+                    eh = process.rightElevator.h;
+            
+            end
             if dir == 1
-                if elevator.direction == dir && elevator.currentFloor < aim
-                    tn = elevator.v / elevator.acceleration;
-                    s = elevator.v * tn - 0.5 * elevator.acceleration * tn * tn;
-                    if s < abs(elevator.h-aim*elevator.floorHeight)
+                if edir == dir && eh < aim*process.floorHeight
+                    tn = ev / ea;
+                    s = ev * tn - 0.5 * ea * tn * tn;
+                    if s < abs(eh-aim*process.floorHeight)
                         result = true;
                     else
                         result = false;
@@ -44,10 +58,10 @@ classdef elevatorProcessor < handle
                     result = false;
                 end
             elseif dir == -1
-                if elevator.direction == dir && elevator.currentFloor > aim
-                    tn = - elevator.v / elevator.acceleration;
-                    s = elevator.v * tn + 0.5 * elevator.acceleration * tn * tn;
-                    if abs(s) < abs(elevator.h-aim*elevator.floorHeight)
+                if edir == dir && eh > aim*process.floorHeight
+                    tn = - ev / ea;
+                    s = ev * tn + 0.5 * ea * tn * tn;
+                    if abs(s) < abs(eh-aim*process.floorHeight)
                         result = true;
                     else
                         result = false;
@@ -81,40 +95,40 @@ classdef elevatorProcessor < handle
                 if process.leftElevator.direction == 0 
                     % if the standing one is on the calling floor, use it
                     if process.leftElevator.currentFloor == aim
-                        process.leftElevator.receiveReq(aim);
+                        process.leftElevator.receiveReq(aim,direction);
                     % or the request is on the running one's way and can be
                     % carried
-                    elseif process.judgePos(process.rightElevator, aim, direction)
-                        process.rightElevator.receiveReq(aim);
+                    elseif process.judgePos(1, aim, direction)
+                        process.rightElevator.receiveReq(aim,direction);
                     % neither, call the still one to carry
                     else 
-                        process.leftElevator.receiveReq(aim);
+                        process.leftElevator.receiveReq(aim,direction);
                     end
                 % right one still
                 else
                     if process.rightElevator.currentFloor == aim
-                        process.rightElevator.receiveReq(aim);
-                    elseif process.judgePos(process.leftElevator, aim, direction)
-                        process.leftElevator.receiveReq(aim);
+                        process.rightElevator.receiveReq(aim,direction);
+                    elseif process.judgePos(0, aim, direction)
+                        process.leftElevator.receiveReq(aim,direction);
                     else 
-                        process.rightElevator.receiveReq(aim);
+                        process.rightElevator.receiveReq(aim,direction);
                     end
                 end
             else  % both are running!
                 % if left one is OK to carry
-                if process.judgePos(process.leftElevator,aim,direction)
+                if process.judgePos(0,aim,direction)
                     % while right one is OK too! this time call the nearest one
-                    if process.judgePos(process.rightElevator,aim,direction)
+                    if process.judgePos(1,aim,direction)
                         process.judgeDist(aim,direction);
                     % right one is not OK...
                     else
-                        process.leftElevator.receiveReq(aim);
+                        process.leftElevator.receiveReq(aim,direction);
                     end
                 % if right one is OK to carry
                 % since the situation of left is OK has been judged, just
                 % let right one accept it
-                elseif process.judgePos(process.rightElevator,aim,direction)
-                    process.rightElevator.receiveReq(aim);
+                elseif process.judgePos(1,aim,direction)
+                    process.rightElevator.receiveReq(aim,direction);
                 % neither is OK to carry in their single run
                 % store it in the processor's temporary list and wait
                 else
