@@ -289,6 +289,7 @@ classdef singleElevator < handle
            end
        end
        
+       % used to set elevator's direction in stayFunciton().
        function setDir(process,aim,direction)
            if aim > process.currentFloor
                process.direction = 1;
@@ -361,6 +362,16 @@ classdef singleElevator < handle
            
            end
            process.calculateAndDisplay(dt);
+       end
+       
+       % open door button
+       function openDoor(process)
+           
+       end
+       
+       % close door button
+       function closeDoor(process)
+           
        end
        
    end

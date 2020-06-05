@@ -8,7 +8,7 @@ classdef elevatorProcessor < handle
         leftElevator
         rightElevator
         floorHeight = 3;    % for convenient, it'll be copied in elevator's properties.
-        dt = 0.05;           % 1/dt defines the refresh rate of the processor.
+        dt = 0.1;           % 1/dt defines the refresh rate of the processor.
         tempUp = [];
         tempDown = [];
     end
@@ -230,6 +230,10 @@ classdef elevatorProcessor < handle
                     process.SecondFloorApp.displayRightDir(dirMessage);
                     process.ThirdFloorApp.displayRightDir(dirMessage);
             end
+        end
+        
+        function keepDoor(process,direction)
+            
         end
         
         
