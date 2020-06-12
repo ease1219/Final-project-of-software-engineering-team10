@@ -162,6 +162,8 @@ classdef elevatorProcessor < handle
                                     process.SecondFloorApp.UpLamp.Color = [0.9,0.9,0.9];
                                 case -1
                                     process.SecondFloorApp.DownLamp.Color = [0.9,0.9,0.9];
+                                case 0
+                                    
                             end
                         case 1
                             process.SecondFloorApp.openRightDoor();

@@ -18,6 +18,8 @@ classdef singleElevator < handle
        upRequest=[];            % used to store the requests of going up
        downRequest=[];          % used to store the requests of going down
        temp = [];               % some requests cannot be finished immediately, store them in temp.
+       open = 0;                % a parameter to record whether there is a request of open the door
+       close = 0;               % a parameter to record whether there is a request of closing the door
        
        elevatorProcessor        % the processor
        ElevatorUI               % UI
@@ -84,6 +86,7 @@ classdef singleElevator < handle
        
        % while door is opening(door=2)
        function doorOpening(process,dt)
+
            if process.t < process.switchTime
                process.t = process.t + dt;
            else
@@ -94,7 +97,13 @@ classdef singleElevator < handle
        
        % while door is closing(door=3)
        function doorClosing(process,dt)
-           if process.t < process.switchTime
+           if process.open == 1
+               process.open = 0;
+               process.ElevatorUI.openInsideDoor();
+               process.elevatorProcessor.
+               process.door = 2;
+               process.t = 0;
+           elseif process.t < process.switchTime
                process.t = process.t + dt;
            else
                process.t = 0;
@@ -104,6 +113,9 @@ classdef singleElevator < handle
        
        % while door has been opened(door=1)
        function doorOpened(process,dt)
+           if process.open == 1
+               process.t = 0;
+               process.open = 0;
            if process.t < process.doorKeepTime
                process.t = process.t + dt;
            else
@@ -366,11 +378,16 @@ classdef singleElevator < handle
        
        % open door button
        function openDoor(process)
-           
+           if process.v == 0
+               process.open = 1;
+           end
        end
        
        % close door button
        function closeDoor(process)
+           if process.v == 0
+               process.close = 1;
+           end
            
        end
        
