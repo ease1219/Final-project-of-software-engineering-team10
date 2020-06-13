@@ -234,10 +234,6 @@ classdef elevatorProcessor < handle
             end
         end
         
-        function keepDoor(process,direction)
-            
-        end
-        
         
     end
     
