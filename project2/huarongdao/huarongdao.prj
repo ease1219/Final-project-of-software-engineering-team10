@@ -1,0 +1,116 @@
+<deployment-project plugin="plugin.apptool" plugin-version="1.0">
+  <configuration build-checksum="601023972" file="C:\Users\Nathan\Desktop\Final-project-of-software-engineering-team10\project2\huarongdao\huarongdao.prj" location="C:\Users\Nathan\Desktop\Final-project-of-software-engineering-team10\project2\huarongdao" name="huarongdao" target="target.mlapps" target-name="打包为 App">
+    <param.appname>huarongdao</param.appname>
+    <param.authnamewatermark />
+    <param.email />
+    <param.company />
+    <param.icon />
+    <param.icons />
+    <param.summary />
+    <param.description />
+    <param.screenshot />
+    <param.version>1.0</param.version>
+    <param.products.name />
+    <param.products.id />
+    <param.products.version />
+    <param.platforms />
+    <param.output>C:\Users\Nathan\Desktop</param.output>
+    <param.guid>9c386fed-60b4-49f8-8aa2-a0ba506f93fc</param.guid>
+    <unset>
+      <param.authnamewatermark />
+      <param.email />
+      <param.company />
+      <param.icon />
+      <param.icons />
+      <param.summary />
+      <param.description />
+      <param.screenshot />
+      <param.version />
+      <param.products.name />
+      <param.products.id />
+      <param.products.version />
+      <param.platforms />
+    </unset>
+    <fileset.main>
+      <file>${PROJECT_ROOT}\Starter.mlapp</file>
+    </fileset.main>
+    <fileset.depfun>
+      <file>${PROJECT_ROOT}\board.mlapp</file>
+      <file>${PROJECT_ROOT}\boardmirror.m</file>
+      <file>${PROJECT_ROOT}\caocao.jpg</file>
+      <file>${PROJECT_ROOT}\ChessPosition.m</file>
+      <file>${PROJECT_ROOT}\chesstype.m</file>
+      <file>${PROJECT_ROOT}\guanyu.jpg</file>
+      <file>${PROJECT_ROOT}\huangzhong.jpg</file>
+      <file>${PROJECT_ROOT}\Level.m</file>
+      <file>${PROJECT_ROOT}\machao.jpg</file>
+      <file>${PROJECT_ROOT}\Win.mlapp</file>
+      <file>${PROJECT_ROOT}\you_win.jpg</file>
+      <file>${PROJECT_ROOT}\zhangfei.jpg</file>
+      <file>${PROJECT_ROOT}\zhaoyun.jpg</file>
+      <file>${PROJECT_ROOT}\zu.jpg</file>
+    </fileset.depfun>
+    <fileset.resources />
+    <fileset.package />
+    <build-deliverables>
+      <file location="C:\Users\Nathan" name="Desktop" optional="false">C:\Users\Nathan\Desktop</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>K:\MATLAB\R2019b</root>
+      <toolboxes>
+        <toolbox name="matlabcoder" />
+        <toolbox name="embeddedcoder" />
+        <toolbox name="gpucoder" />
+        <toolbox name="fixedpoint" />
+        <toolbox name="matlabhdlcoder" />
+        <toolbox name="neuralnetwork" />
+      </toolboxes>
+      <toolbox>
+        <matlabcoder>
+          <enabled>true</enabled>
+        </matlabcoder>
+      </toolbox>
+      <toolbox>
+        <embeddedcoder>
+          <enabled>true</enabled>
+        </embeddedcoder>
+      </toolbox>
+      <toolbox>
+        <gpucoder>
+          <enabled>true</enabled>
+        </gpucoder>
+      </toolbox>
+      <toolbox>
+        <fixedpoint>
+          <enabled>true</enabled>
+        </fixedpoint>
+      </toolbox>
+      <toolbox>
+        <matlabhdlcoder>
+          <enabled>true</enabled>
+        </matlabhdlcoder>
+      </toolbox>
+      <toolbox>
+        <neuralnetwork>
+          <enabled>true</enabled>
+        </neuralnetwork>
+      </toolbox>
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>10.0</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>
