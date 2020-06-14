@@ -86,7 +86,12 @@ classdef singleElevator < handle
        
        % while door is opening(door=2)
        function doorOpening(process,dt)
-
+           if process.open == 1 || process.close == 1
+               process.open = 0;
+               process.close = 0;
+               process.ElevatorUI.Lamp_Close.Color = [0.9,0.9,0.9];
+               process.ElevatorUI.Lamp_Open.Color = [0.9,0.9,0.9];
+           end
            if process.t < process.switchTime
                process.t = process.t + dt;
            else
@@ -97,12 +102,18 @@ classdef singleElevator < handle
        
        % while door is closing(door=3)
        function doorClosing(process,dt)
+           if process.close == 1
+               process.close = 0;
+               process.ElevatorUI.Lamp_Close.Color = [0.9,0.9,0.9];
+           end
            if process.open == 1
                process.open = 0;
                process.ElevatorUI.openInsideDoor();
-               process.elevatorProcessor.
+               process.elevatorProcessor.openOutsideDoor(process.currentFloor, process.NO, process.direction);
+               process.ElevatorUI.Lamp_Open.Color = [0.9,0.9,0.9];
                process.door = 2;
                process.t = 0;
+
            elseif process.t < process.switchTime
                process.t = process.t + dt;
            else
@@ -116,7 +127,17 @@ classdef singleElevator < handle
            if process.open == 1
                process.t = 0;
                process.open = 0;
-           if process.t < process.doorKeepTime
+               process.ElevatorUI.Lamp_Open.Color = [0.9,0.9,0.9];
+           end
+           if process.close == 1
+               process.t = 0;
+               process.close = 0;
+               process.ElevatorUI.Lamp_Close.Color = [0.9,0.9,0.9];
+               process.door = 3;
+               process.ElevatorUI.closeInsideDoor();
+               process.elevatorProcessor.closeOutsideDoor(process.currentFloor,process.NO);
+               
+           elseif process.t < process.doorKeepTime
                process.t = process.t + dt;
            else
                process.t = 0;
@@ -128,13 +149,32 @@ classdef singleElevator < handle
        
        % while door has been closed(door=0)
        function doorClosed(process,dt)
-           switch process.direction
-               case 1 % up
-                   process.upFunction(dt);
-               case -1 % down
-                   process.downFunction(dt);
-               case 0 % no direction
-                   process.stayFunction(dt);
+           if process.close == 1
+               process.close = 0;
+               process.ElevatorUI.Lamp_Close.Color = [0.9,0.9,0.9];
+           end
+           if process.open == 1
+               if process.v == 0
+                   process.door = 2;
+                   process.open = 0;
+                   process.ElevatorUI.Lamp_Open.Color = [0.9,0.9,0.9];
+                   process.t = 0;
+                   process.ElevatorUI.openInsideDoor();
+                   process.elevatorProcessor.openOutsideDoor(process.currentFloor, process.NO, process.direction);
+               else
+                   process.open = 0;
+                   process.ElevatorUI.Lamp_Open.Color = [0.9,0.9,0.9];
+               end
+           else
+               
+               switch process.direction
+                   case 1 % up
+                       process.upFunction(dt);
+                   case -1 % down
+                       process.downFunction(dt);
+                   case 0 % no direction
+                       process.stayFunction(dt);
+               end
            end
        end
        
@@ -374,21 +414,6 @@ classdef singleElevator < handle
            
            end
            process.calculateAndDisplay(dt);
-       end
-       
-       % open door button
-       function openDoor(process)
-           if process.v == 0
-               process.open = 1;
-           end
-       end
-       
-       % close door button
-       function closeDoor(process)
-           if process.v == 0
-               process.close = 1;
-           end
-           
        end
        
    end
