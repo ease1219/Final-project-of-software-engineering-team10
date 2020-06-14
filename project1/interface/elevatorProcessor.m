@@ -87,12 +87,12 @@ classdef elevatorProcessor < handle
         function receiveReq(process, aim, direction)  
             % if both elevators are standing still, call the nearest
             % elevator
-            if process.leftElevator.direction == 0 && process.rightElevator.direction == 0
+            if process.leftElevator.v == 0 && process.rightElevator.v == 0
                 process.judgeDist(aim,direction);
             % if one is standing stll and another one is running
-            elseif process.leftElevator.direction == 0 || process.rightElevator.direction == 0
+            elseif process.leftElevator.v == 0 || process.rightElevator.v == 0
                 % left one is standing still
-                if process.leftElevator.direction == 0 
+                if process.leftElevator.v == 0 
                     % if the standing one is on the calling floor, use it
                     if process.leftElevator.currentFloor == aim
                         process.leftElevator.receiveReq(aim,direction);

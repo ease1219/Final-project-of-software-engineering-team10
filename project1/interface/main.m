@@ -9,11 +9,13 @@ LE.NO = 0;
 LE.floorHeight = EP.floorHeight;
 LEapp = Elevator_UI;
 LEapp.NO = 0;
+LEapp.EleNO.Text = 'Left';
 RE = singleElevator;
 RE.NO = 1;
 RE.floorHeight = EP.floorHeight;
 REapp = Elevator_UI;
 REapp.NO = 1;
+REapp.EleNO.Text = 'Right';
 
 EP.LeftElevatorApp = LEapp;
 EP.RightElevatorApp = REapp;

@@ -13,8 +13,8 @@ classdef singleElevator < handle
        door = 0;                % 0 means door is closed. 1 means opened, 2 means during opening, 3 means during closing
        floorHeight              % height between two floor(m), will be copied from processor
        switchTime = 1.0;        % time needed for door opening or closing
-       doorKeepTime = 5.0;      % after open the door, keep the door open for a short period of time(s)
-       limitTime = 120.0        % time keep in the floor after finally usage before let it go to default floor(s)
+       doorKeepTime = 3.0;      % after open the door, keep the door open for a short period of time(s)
+       limitTime = 60.0        % time keep in the floor after finally usage before let it go to default floor(s)
        upRequest=[];            % used to store the requests of going up
        downRequest=[];          % used to store the requests of going down
        temp = [];               % some requests cannot be finished immediately, store them in temp.
