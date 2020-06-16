@@ -19,11 +19,23 @@ function runtest()
     right = [420,990];
     [xx,yy,dd] = setco();
     
-    game = board;
-    game.level = 1;
+    game = Starter;
+    
     robot = java.awt.Robot;
+    pause(3);
+    robot.mouseMove(370,855); % choose level
+    pause(1);
+    pressbutton(robot);
+    robot.mouseMove(300,700); % choose ºáµ¶Á¢Âí
+    pause(1);
+    pressbutton(robot);
+    pause(3);
+    robot.mouseMove(280,905); % startbutton
+    pause(1);
+    pressbutton(robot);
+    pause(3);
     robot.mouseMove(400,500); % start button place
-    pause(5);
+    pause(3);
     pressbutton(robot);
     pause(1);
     
@@ -68,7 +80,7 @@ end
 
 function movechess(robot,x,y,direction,xlist,ylist,up,down,left,right)
     robot.mouseMove(xlist(x),ylist(y));
-    pause(0.5);
+    pause(0.8);
     pressbutton(robot);
     switch direction
         case 'up'
