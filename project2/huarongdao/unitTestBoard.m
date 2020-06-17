@@ -12,7 +12,7 @@ classdef unitTestBoard < matlab.unittest.TestCase
             % button should be able to use.
         end
         
-        function testCao(testCase)
+        function testCaoCao(testCase)
             % in Test level, CaoCao is just one step from the win state.
             % Choose Caocao, one action button should be able to use.
             % Move it, win UI should appear.
