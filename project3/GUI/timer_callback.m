@@ -7,12 +7,14 @@ classdef timer_callback
 
         function timer_init(app)
             app.Com_Timer_id = timer;
-            app.Com_Timer_id.StartDelay = 1.0;
-            app.Com_Timer_id.Period = 1.0;
-            app.Com_Timer_id.ExecutionMode = 'fixedSpacing';
+            app.Com_Timer_id.StartDelay = 0.0;
+            app.Com_Timer_id.Period = 0.0;
+            app.Com_Timer_id.ExecutionMode = 'fixedDelay';
+            app.Com_Timer_id.TasksToExecute = 86400;
             app.Com_Timer_id.TimerFcn = @(~, ~) timer_handler(app);
         end
-    
+         %   x=1;
+
        
         function timer_start(app)
             start(app.Com_Timer_id);
