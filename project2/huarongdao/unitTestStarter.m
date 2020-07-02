@@ -24,8 +24,7 @@ classdef unitTestStarter < matlab.uitest.TestCase
         
         function testStartButton(testCase)
             % After the level is chosen, press the Start button, a game
-            % board should appear, and the board's level should be the 
-            % chosen level.(How?)
+            % board should appear.
             testCase.choose(testCase.App.Select,"test");
             pause(2);
             testCase.press(testCase.App.STARTButton);
